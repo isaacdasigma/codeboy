@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevSuite - Developer Resources</title>
+  <title>DevSuite - Workspace Modules</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,11 +23,7 @@
       --font-mono: 'Fira Code', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-main);
@@ -38,7 +34,7 @@
       min-height: 100vh;
     }
 
-    /* Header & Navigation */
+    /* Navigation Header */
     header {
       background-color: var(--bg-card);
       border-bottom: 1px solid var(--border-color);
@@ -73,11 +69,7 @@
       -webkit-text-fill-color: transparent;
     }
 
-    nav {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+    nav { display: flex; gap: 10px; align-items: center; }
 
     .nav-link {
       color: var(--text-muted);
@@ -92,17 +84,10 @@
       gap: 6px;
     }
 
-    .nav-link:hover {
-      color: var(--text-main);
-      background-color: rgba(255, 255, 255, 0.05);
-    }
+    .nav-link:hover { color: var(--text-main); background-color: rgba(255, 255, 255, 0.05); }
+    .nav-link.active { background-color: var(--accent-primary); color: white; }
 
-    .nav-link.active {
-      background-color: var(--accent-primary);
-      color: white;
-    }
-
-    /* Main Content */
+    /* Main Container */
     main {
       flex: 1;
       max-width: 1400px;
@@ -120,18 +105,8 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 650px;
-      margin: 0 auto;
-    }
+    .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .hero p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
     /* URL Loader Bar */
     .custom-loader-card {
@@ -142,25 +117,10 @@
       margin-bottom: 2.5rem;
     }
 
-    .custom-loader-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .custom-loader-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .custom-loader-card p { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem; }
 
-    .custom-loader-card p {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 10px;
-    }
-
+    .input-group { display: flex; gap: 10px; }
     .input-group input {
       flex: 1;
       background-color: var(--bg-input);
@@ -172,10 +132,7 @@
       font-size: 0.9rem;
       outline: none;
     }
-
-    .input-group input:focus {
-      border-color: var(--accent-primary);
-    }
+    .input-group input:focus { border-color: var(--accent-primary); }
 
     .btn {
       background-color: var(--accent-primary);
@@ -193,12 +150,11 @@
       gap: 6px;
       transition: background 0.2s;
     }
+    .btn:hover { background-color: var(--accent-hover); }
+    .btn-secondary { background-color: #334155; color: var(--text-main); }
+    .btn-secondary:hover { background-color: #475569; }
 
-    .btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    /* Grid Layout for App Cards */
+    /* Cards Grid */
     .games-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -215,63 +171,54 @@
       justify-content: space-between;
       transition: transform 0.2s, border-color 0.2s;
     }
-
-    .game-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-secondary);
-    }
+    .game-card:hover { transform: translateY(-4px); border-color: var(--accent-secondary); }
 
     .game-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-      background: rgba(6, 182, 212, 0.12);
-      color: var(--accent-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
+      width: 52px; height: 52px; border-radius: 12px;
+      background: rgba(6, 182, 212, 0.12); color: var(--accent-secondary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; margin-bottom: 1rem;
     }
 
-    .game-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+    .game-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .game-desc { color: var(--text-muted); font-size: 0.875rem; line-height: 1.5; margin-bottom: 1.5rem; }
 
-    .game-desc {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    .game-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 1.25rem;
-    }
-
+    .game-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
     .tag {
       background-color: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
+      color: var(--text-muted); font-size: 0.75rem;
+      padding: 3px 8px; border-radius: 6px; font-family: var(--font-mono);
     }
 
-    .card-actions {
+    .card-actions { display: flex; gap: 8px; }
+    .card-actions .btn { flex: 1; }
+
+    /* Modal Player Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(15, 23, 42, 0.95);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 1.5rem;
+      height: 56px;
       display: flex;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .card-actions .btn {
-      flex: 1;
-    }
+    .modal-title { font-weight: 700; color: #fff; }
+    .modal-body { flex: 1; width: 100%; height: calc(100vh - 56px); background: #000; position: relative; }
+    .modal-body iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
@@ -293,128 +240,112 @@
   <!-- Main Container -->
   <main>
     <div class="hero">
-      <h1>🛠️ Interactive Workspace Modules</h1>
-      <p>Access external interactive tools, logic environments, and WebAssembly web components.</p>
+      <h1>🛠️ Interactive Web Modules</h1>
+      <p>Launch high-performance HTML5 and WebGL web applications in dedicated player overlays.</p>
     </div>
 
-    <!-- External Link Launcher -->
+    <!-- Custom Link Input -->
     <div class="custom-loader-card">
       <h3>🔗 Open Custom Web Module</h3>
-      <p>Enter any web endpoint URL to launch it directly inside an isolated workspace frame:</p>
+      <p>Paste any web address to launch it inside an isolated player frame:</p>
       <div class="input-group">
-        <input type="text" id="custom-game-url" placeholder="https://username.github.io/project/" value="https://play2048.co/">
-        <button class="btn" onclick="launchCustomUrl()">Launch App</button>
+        <input type="text" id="custom-game-url" value="https://isaacdasigma.github.io/HexGL/">
+        <button class="btn" onclick="openModule('Custom App', document.getElementById('custom-game-url').value)">Launch App</button>
       </div>
     </div>
 
-    <!-- Web Modules Grid -->
+    <!-- App Grid -->
     <div class="games-grid">
 
-      <!-- Item 1: 2048 Logic Engine -->
+      <!-- Item 1: HexGL Racing -->
       <div class="game-card">
-  <div>
-    <div class="game-icon">🏎️</div>
-    <h3 class="game-title">HexGL Racing</h3>
-    <p class="game-desc">Futuristic 3D HTML5 speed racing built with Three.js.</p>
-    <div class="game-meta">
-      <span class="tag">GitHub Pages</span>
-      <span class="tag">3D Racing</span>
-    </div>
-  </div>
-  <div class="card-actions">
-    <a href="game-player.html?title=HexGL%20Racing&url=https://isaacdasigma.github.io/HexGL/" class="btn">Launch Page ➔</a>
-  </div>
-</div>
+        <div>
+          <div class="game-icon">🏎️</div>
+          <h3 class="game-title">HexGL Racing</h3>
+          <p class="game-desc">Futuristic 3D WebGL speed racing game built with HTML5 and Three.js.</p>
+          <div class="game-meta">
+            <span class="tag">GitHub Hosted</span>
+            <span class="tag">3D WebGL</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn" onclick="openModule('HexGL Racing', 'https://isaacdasigma.github.io/HexGL/')">Play Inline ➔</button>
+          <a href="https://isaacdasigma.github.io/HexGL/" target="_blank" class="btn btn-secondary" title="Open directly in new tab if viewer blocks WebGL">New Tab ↗</a>
+        </div>
+      </div>
 
-      <!-- Item 2: Hextris -->
+      <!-- Item 2: 2048 Engine -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🔢</div>
+          <h3 class="game-title">Matrix 2048</h3>
+          <p class="game-desc">Classic 4x4 sliding tile puzzle game. Join matching numbers to hit 2048!</p>
+          <div class="game-meta">
+            <span class="tag">GitHub Hosted</span>
+            <span class="tag">Logic</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn" onclick="openModule('Matrix 2048', 'https://play2048.co/')">Play Inline ➔</button>
+          <a href="https://play2048.co/" target="_blank" class="btn btn-secondary">New Tab ↗</a>
+        </div>
+      </div>
+
+      <!-- Item 3: Hextris -->
       <div class="game-card">
         <div>
           <div class="game-icon">🛑</div>
           <h3 class="game-title">Hextris</h3>
-          <p class="game-desc">A fast-paced hexagonal puzzle game inspired by Tetris. Rotate the central hexagon to match colors.</p>
+          <p class="game-desc">Fast-paced hexagonal puzzle game inspired by Tetris.</p>
           <div class="game-meta">
             <span class="tag">GitHub Pages</span>
             <span class="tag">Arcade</span>
           </div>
         </div>
         <div class="card-actions">
-          <a href="game-player.html?title=Hextris&url=https://hextris.io/" class="btn">Launch Page ➔</a>
-        </div>
-      </div>
-
-      <!-- Item 3: Retro Snake -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🐍</div>
-          <h3 class="game-title">Snake Arcade</h3>
-          <p class="game-desc">Classic retro snake game. Eat apples, grow your tail, and test your precision navigation skills.</p>
-          <div class="game-meta">
-            <span class="tag">HTML5 Canvas</span>
-            <span class="tag">Classic</span>
-          </div>
-        </div>
-        <div class="card-actions">
-          <a href="game-player.html?title=Snake%20Arcade&url=https://playsnake.org/" class="btn">Launch Page ➔</a>
-        </div>
-      </div>
-
-      <!-- Item 4: Breakout -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🧱</div>
-          <h3 class="game-title">Brick Breaker</h3>
-          <p class="game-desc">Bounce the ball off your paddle to smash through rows of colorful bricks in this retro classic.</p>
-          <div class="game-meta">
-            <span class="tag">GitHub JS</span>
-            <span class="tag">Action</span>
-          </div>
-        </div>
-        <div class="card-actions">
-          <a href="game-player.html?title=Brick%20Breaker&url=https://free247games.com/brick-breaker/" class="btn">Launch Page ➔</a>
-        </div>
-      </div>
-
-      <!-- Item 5: Pac-Man -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">👻</div>
-          <h3 class="game-title">Pac-Man</h3>
-          <p class="game-desc">Navigate through maze corridors, eat dot snacks, and outsmart colorful chasing ghosts.</p>
-          <div class="game-meta">
-            <span class="tag">GitHub Open-Source</span>
-            <span class="tag">Retro</span>
-          </div>
-        </div>
-        <div class="card-actions">
-          <a href="game-player.html?title=Pac-Man&url=https://pacman-js.vercel.app/" class="btn">Launch Page ➔</a>
-        </div>
-      </div>
-
-      <!-- Item 6: Flappy Bird -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🐤</div>
-          <h3 class="game-title">Flappy Bird</h3>
-          <p class="game-desc">Press spacebar or tap to guide the bird through narrow pipe gaps without touching obstacles.</p>
-          <div class="game-meta">
-            <span class="tag">GitHub Web</span>
-            <span class="tag">Skill</span>
-          </div>
-        </div>
-        <div class="card-actions">
-          <a href="game-player.html?title=Flappy%20Bird&url=https://flappybird.io/" class="btn">Launch Page ➔</a>
+          <button class="btn" onclick="openModule('Hextris', 'https://hextris.io/')">Play Inline ➔</button>
+          <a href="https://hextris.io/" target="_blank" class="btn btn-secondary">New Tab ↗</a>
         </div>
       </div>
 
     </div>
   </main>
 
+  <!-- Integrated Modal Frame -->
+  <div class="modal-overlay" id="player-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title-text">Module Viewer</span>
+      <div style="display:flex; gap: 8px;">
+        <a id="modal-external-link" href="#" target="_blank" class="btn btn-secondary">Open in New Tab ↗</a>
+        <button class="btn btn-secondary" onclick="reloadModalFrame()">🔄 Reload</button>
+        <button class="btn" onclick="closeModule()">✕ Close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe 
+        id="modal-frame" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; gamepad; camera; microphone; fullscreen; xr-spatial-tracking" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
   <script>
-    function launchCustomUrl() {
-      const url = document.getElementById('custom-game-url').value.trim();
-      if (url) {
-        window.location.href = `game-player.html?title=Web%20Module&url=${encodeURIComponent(url)}`;
-      }
+    function openModule(title, url) {
+      document.getElementById('modal-title-text').textContent = title;
+      document.getElementById('modal-frame').src = url;
+      document.getElementById('modal-external-link').href = url;
+      document.getElementById('player-modal').classList.add('active');
+    }
+
+    function closeModule() {
+      document.getElementById('modal-frame').src = '';
+      document.getElementById('player-modal').classList.remove('active');
+    }
+
+    function reloadModalFrame() {
+      const frame = document.getElementById('modal-frame');
+      frame.src = frame.src;
     }
   </script>
 </body>
