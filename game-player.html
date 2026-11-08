@@ -141,16 +141,16 @@
     const moduleUrl = params.get('url');
     const moduleTitle = params.get('title');
 
-    if (moduleTitle) {
-      document.getElementById('module-title-display').textContent = decodeURIComponent(moduleTitle);
-      document.title = `${decodeURIComponent(moduleTitle)} - DevSuite`;
-    }
-
-    if (moduleUrl) {
-      document.getElementById('module-frame').src = decodeURIComponent(moduleUrl);
-    } else {
-      document.getElementById('module-frame').src = 'https://play2048.co/';
-    }
+    // Replace this block near the bottom of game-player.html:
+if (moduleUrl) {
+  const decodedUrl = decodeURIComponent(moduleUrl);
+  document.getElementById('module-frame').src = decodedUrl;
+  document.getElementById('direct-link').href = decodedUrl;
+} else {
+  // Set your default game link here instead of 2048:
+  document.getElementById('module-frame').src = 'https://isaacdasigma.github.io/HexGL/';
+  document.getElementById('direct-link').href = 'https://isaacdasigma.github.io/HexGL/';
+}
 
     function reloadModule() {
       const frame = document.getElementById('module-frame');
