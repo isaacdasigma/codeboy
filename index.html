@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSuite - All-in-One Web Toolbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --bg-input: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-primary: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-secondary: #06b6d4;
+      --border-color: #334155;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header & Navigation */
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .brand span {
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn, .nav-link {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover, .nav-link:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      background-color: var(--accent-primary);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-content {
+      display: none;
+      width: 100%;
+      height: 100%;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Headers */
+    .section-header {
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* Buttons */
+    .btn {
+      background-color: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    /* Home Page */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-bottom: 2rem;
+      background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .tool-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-primary);
+    }
+
+    .tool-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background-color: rgba(99, 102, 241, 0.15);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tool-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-card p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Common Layout for Tools */
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      height: calc(100vh - 180px);
+      min-height: 500px;
+    }
+
+    @media (max-width: 900px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+
+    .pane {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pane-header {
+      padding: 10px 16px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    textarea.code-editor {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      background-color: var(--bg-input);
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding: 14px;
+      border: none;
+      outline: none;
+      resize: none;
+    }
+
+    iframe.preview-frame {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      background: #ffffff;
+      border: none;
+    }
+
+    .console-output {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      background-color: var(--bg-input);
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 14px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-y: auto;
+    }
+
+    /* File Uploader Dropzone */
+    .upload-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.5rem;
+      background-color: rgba(30, 41, 59, 0.5);
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent-primary);
+      background-color: rgba(99, 102, 241, 0.05);
+    }
+
+    .upload-zone p {
+      margin-top: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    /* Calculator View */
+    .calculator-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: 2rem 0;
+    }
+
+    .calculator {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .calc-screen {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.25rem;
+      text-align: right;
+    }
+
+    .calc-history {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-height: 1.2rem;
+      margin-bottom: 4px;
+      overflow: hidden;
+    }
+
+    .calc-display {
+      font-size: 2rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      word-wrap: break-word;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .calc-btn {
+      background-color: #334155;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 0;
+      font-size: 1.15rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    .calc-btn:active {
+      transform: scale(0.96);
+    }
+
+    .calc-btn:hover {
+      background-color: #475569;
+    }
+
+    .calc-btn.op {
+      background-color: var(--accent-primary);
+    }
+
+    .calc-btn.op:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .calc-btn.action {
+      background-color: #475569;
+      color: #f87171;
+    }
+
+    .calc-btn.action:hover {
+      background-color: #64748b;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.loading {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .status-badge.ready {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-badge.error {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <div class="brand" onclick="switchTab('home')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+        <span>DevSuite</span>
+      </div>
+      <nav>
+        <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+        <button class="nav-btn" onclick="switchTab('uploader')">File Viewer</button>
+        <button class="nav-btn" onclick="switchTab('html-editor')">HTML Sandbox</button>
+        <button class="nav-btn" onclick="switchTab('calculator')">Calculator</button>
+        <button class="nav-btn" onclick="switchTab('js-runner')">JS Console</button>
+        <button class="nav-btn" onclick="switchTab('python-runner')">Python</button>
+        <a href="freetime.html" class="nav-link">🎮 Free Time</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Areas -->
+  <main>
+    <!-- Home Tab -->
+    <div id="home" class="tab-content active">
+      <div class="hero">
+        <h1>Developer & Power User Toolkit</h1>
+        <p>A unified suite of lightweight web development tools, file inspection utilities, and interactive execution environments.</p>
+      </div>
+      
+      <div class="tools-grid">
+        <div class="tool-card" onclick="switchTab('uploader')">
+          <div>
+            <div class="tool-icon">📁</div>
+            <h3>HTML File Uploader & Viewer</h3>
+            <p>Upload and inspect local HTML files. View source code and render live previews instantly.</p>
+          </div>
+          <button class="btn">Launch Viewer</button>
+        </div>
+
+        <div class="tool-card" onclick="switchTab('html-editor')">
+          <div>
+            <div class="tool-icon">💻</div>
+            <h3>HTML Live Sandbox</h3>
+            <p>Type HTML, CSS, and JS code side-by-side with real-time browser rendering.</p>
+          </div>
+          <button class="btn">Launch Sandbox</button>
+        </div>
+
+        <div class="tool-card" onclick="switchTab('calculator')">
+          <div>
+            <div class="tool-icon">🧮</div>
+            <h3>Scientific Calculator</h3>
+            <p>Full-featured interactive calculator supporting arithmetic and square root operations.</p>
+          </div>
+          <button class="btn">Launch Calculator</button>
+        </div>
+
+        <div class="tool-card" onclick="switchTab('js-runner')">
+          <div>
+            <div class="tool-icon">⚡</div>
+            <h3>JavaScript Runner</h3>
+            <p>Execute JavaScript code snippets in real-time with an integrated log & error console output.</p>
+          </div>
+          <button class="btn">Launch JS Console</button>
+        </div>
+
+        <div class="tool-card" onclick="switchTab('python-runner')">
+          <div>
+            <div class="tool-icon">🐍</div>
+            <h3>Client-side Python</h3>
+            <p>Run Python 3 scripts directly inside your browser powered by Pyodide WebAssembly runtime.</p>
+          </div>
+          <button class="btn">Launch Python</button>
+        </div>
+
+        <div class="tool-card" onclick="window.location.href='freetime.html'">
+          <div>
+            <div class="tool-icon">🎮</div>
+            <h3>Free Time</h3>
+            <p>Take a break! Navigate to your dedicated free time page.</p>
+          </div>
+          <a href="freetime.html" class="btn">Go to Free Time</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Uploader Tab -->
+    <div id="uploader" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">HTML File Uploader & Viewer</h2>
+          <p class="section-subtitle">Drop or select an HTML file to view its code and live preview</p>
+        </div>
+      </div>
+
+      <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" style="margin: 0 auto 0.5rem;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <h3>Click or Drag & Drop HTML File Here</h3>
+        <p>Supports .html, .htm, .txt files</p>
+        <input type="file" id="file-input" accept=".html,.htm,.txt" style="display: none" onchange="handleFileSelect(event)">
+      </div>
+
+      <div class="editor-layout" id="uploader-preview-layout" style="display: none;">
+        <div class="pane">
+          <div class="pane-header">
+            <span id="uploaded-filename">Source Code</span>
+            <button class="btn btn-secondary" onclick="clearUploader()">Clear</button>
+          </div>
+          <textarea id="uploader-code" class="code-editor" readonly></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-header">Live Preview</div>
+          <iframe id="uploader-frame" class="preview-frame"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTML Live Sandbox Tab -->
+    <div id="html-editor" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">HTML Code Sandbox</h2>
+          <p class="section-subtitle">Type code on the left to see live rendering on the right</p>
+        </div>
+        <div style="display:flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="resetHTMLSandbox()">Reset</button>
+          <button class="btn" onclick="updateHTMLPreview()">Run Code</button>
+        </div>
+      </div>
+
+      <div class="editor-layout">
+        <div class="pane">
+          <div class="pane-header">HTML Editor</div>
+          <textarea id="sandbox-code" class="code-editor" placeholder="Write your HTML here..." oninput="updateHTMLPreview()"></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-header">Live Output</div>
+          <iframe id="sandbox-frame" class="preview-frame"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculator Tab -->
+    <div id="calculator" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Calculator</h2>
+          <p class="section-subtitle">Perform quick arithmetic and scientific calculations</p>
+        </div>
+      </div>
+      
+      <div class="calculator-wrapper">
+        <div class="calculator">
+          <div class="calc-screen">
+            <div class="calc-history" id="calc-history"></div>
+            <div class="calc-display" id="calc-display">0</div>
+          </div>
+          <div class="calc-grid">
+            <button class="calc-btn action" onclick="calcAction('C')">C</button>
+            <button class="calc-btn action" onclick="calcAction('DEL')">⌫</button>
+            <button class="calc-btn op" onclick="calcOp('%')">%</button>
+            <button class="calc-btn op" onclick="calcOp('/')">÷</button>
+
+            <button class="calc-btn" onclick="calcNum('7')">7</button>
+            <button class="calc-btn" onclick="calcNum('8')">8</button>
+            <button class="calc-btn" onclick="calcNum('9')">9</button>
+            <button class="calc-btn op" onclick="calcOp('*')">×</button>
+
+            <button class="calc-btn" onclick="calcNum('4')">4</button>
+            <button class="calc-btn" onclick="calcNum('5')">5</button>
+            <button class="calc-btn" onclick="calcNum('6')">6</button>
+            <button class="calc-btn op" onclick="calcOp('-')">-</button>
+
+            <button class="calc-btn" onclick="calcNum('1')">1</button>
+            <button class="calc-btn" onclick="calcNum('2')">2</button>
+            <button class="calc-btn" onclick="calcNum('3')">3</button>
+            <button class="calc-btn op" onclick="calcOp('+')">+</button>
+
+            <button class="calc-btn" onclick="calcNum('0')">0</button>
+            <button class="calc-btn" onclick="calcNum('.')">.</button>
+            <button class="calc-btn op" onclick="calcOp('sqrt')">√</button>
+            <button class="calc-btn op" onclick="calcEquals()" style="background-color: var(--accent-primary); color: white;">=</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS Runner Tab -->
+    <div id="js-runner" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">JavaScript Playground</h2>
+          <p class="section-subtitle">Write and execute client-side JavaScript code with console logging</p>
+        </div>
+        <button class="btn" onclick="runJSCode()">▶ Run JavaScript</button>
+      </div>
+
+      <div class="editor-layout">
+        <div class="pane">
+          <div class="pane-header">JS Script Editor</div>
+          <textarea id="js-code" class="code-editor" placeholder="// Write JavaScript code here..."></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-header">Console Output</div>
+          <div id="js-output" class="console-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Runner Tab -->
+    <div id="python-runner" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Python 3 Environment</h2>
+          <p class="section-subtitle">Execute Python scripts in-browser via Pyodide WebAssembly</p>
+        </div>
+        <div style="display:flex; align-items:center; gap: 12px;">
+          <span id="py-status" class="status-badge loading">Loading Pyodide...</span>
+          <button class="btn" id="py-run-btn" onclick="runPythonCode()" disabled>▶ Run Python</button>
+        </div>
+      </div>
+
+      <div class="editor-layout">
+        <div class="pane">
+          <div class="pane-header">Python Script Editor</div>
+          <textarea id="py-code" class="code-editor" placeholder="# Write Python code here..."></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-header">Terminal / STDOUT Output</div>
+          <div id="py-output" class="console-output">Initializing Python runtime engine...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Tab Navigation
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      
+      const targetTab = document.getElementById(tabId);
+      if(targetTab) targetTab.classList.add('active');
+
+      const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
+        btn.getAttribute('onclick')?.includes(`'${tabId}'`)
+      );
+      if(activeBtn) activeBtn.classList.add('active');
+    }
+
+    // HTML File Uploader & Viewer Logic
+    const dropZone = document.getElementById('drop-zone');
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) processFile(files[0]);
+    });
+
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      if (files.length > 0) processFile(files[0]);
+    }
+
+    function processFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        document.getElementById('uploader-code').value = content;
+        document.getElementById('uploaded-filename').textContent = file.name;
+        
+        const iframe = document.getElementById('uploader-frame');
+        iframe.srcdoc = content;
+
+        document.getElementById('uploader-preview-layout').style.display = 'grid';
+      };
+      reader.readAsText(file);
+    }
+
+    function clearUploader() {
+      document.getElementById('uploader-code').value = '';
+      document.getElementById('uploader-frame').srcdoc = '';
+      document.getElementById('file-input').value = '';
+      document.getElementById('uploader-preview-layout').style.display = 'none';
+    }
+
+    // HTML Sandbox Logic
+    const defaultHTML = `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    h1 { color: #6366f1; }
+    .card { background: #f1f5f9; border-radius: 8px; padding: 20px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h1>Hello World!</h1>
+  <p>Edit this code in the editor to test real-time HTML/CSS changes.</p>
+  <div class="card">
+    <button onclick="alert('Interactive Code Works!')">Click Me</button>
+  </div>
+</body>
+</html>`;
+
+    document.getElementById('sandbox-code').value = defaultHTML;
+    function updateHTMLPreview() {
+      const code = document.getElementById('sandbox-code').value;
+      document.getElementById('sandbox-frame').srcdoc = code;
+    }
+    updateHTMLPreview();
+
+    function resetHTMLSandbox() {
+      document.getElementById('sandbox-code').value = defaultHTML;
+      updateHTMLPreview();
+    }
+
+    // Calculator Logic
+    let calcCurrent = '0';
+    let calcExpression = '';
+    let calcResetNext = false;
+
+    function updateCalcDisplay() {
+      document.getElementById('calc-display').textContent = calcCurrent;
+      document.getElementById('calc-history').textContent = calcExpression;
+    }
+
+    function calcNum(num) {
+      if (calcCurrent === '0' || calcResetNext) {
+        calcCurrent = num;
+        calcResetNext = false;
+      } else {
+        if (num === '.' && calcCurrent.includes('.')) return;
+        calcCurrent += num;
+      }
+      updateCalcDisplay();
+    }
+
+    function calcOp(op) {
+      if (op === 'sqrt') {
+        try {
+          calcCurrent = String(Math.sqrt(parseFloat(calcCurrent)));
+          calcResetNext = true;
+        } catch {
+          calcCurrent = 'Error';
+        }
+        updateCalcDisplay();
+        return;
+      }
+      calcExpression += ` ${calcCurrent} ${op}`;
+      calcResetNext = true;
+      updateCalcDisplay();
+    }
+
+    function calcAction(act) {
+      if (act === 'C') {
+        calcCurrent = '0';
+        calcExpression = '';
+      } else if (act === 'DEL') {
+        if (calcCurrent.length > 1) {
+          calcCurrent = calcCurrent.slice(0, -1);
+        } else {
+          calcCurrent = '0';
+        }
+      }
+      updateCalcDisplay();
+    }
+
+    function calcEquals() {
+      try {
+        const fullExpr = (calcExpression + ' ' + calcCurrent).replace(/×/g, '*').replace(/÷/g, '/');
+        const res = eval(fullExpr);
+        calcExpression = '';
+        calcCurrent = String(Number.isInteger(res) ? res : parseFloat(res.toFixed(8)));
+        calcResetNext = true;
+      } catch {
+        calcCurrent = 'Error';
+      }
+      updateCalcDisplay();
+    }
+
+    // JS Runner Logic
+    const defaultJS = `// JavaScript Runner Example
+console.log("Welcome to DevSuite JS Console!");
+
+function calculateFibonacci(n) {
+  let a = 0, b = 1;
+  const sequence = [a, b];
+  for (let i = 2; i < n; i++) {
+    let next = a + b;
+    sequence.push(next);
+    a = b;
+    b = next;
+  }
+  return sequence;
+}
+
+console.log("Fibonacci (First 10):", calculateFibonacci(10));
+`;
+    document.getElementById('js-code').value = defaultJS;
+
+    function runJSCode() {
+      const code = document.getElementById('js-code').value;
+      const outputEl = document.getElementById('js-output');
+      outputEl.textContent = '';
+      
+      const logs = [];
+      const originalLog = console.log;
+      const originalError = console.error;
+      const originalWarn = console.warn;
+
+      console.log = (...args) => logs.push('[LOG] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+      console.warn = (...args) => logs.push('[WARN] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+      console.error = (...args) => logs.push('[ERROR] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+
+      try {
+        const result = new Function(code)();
+        if (result !== undefined) {
+          logs.push('➜ Return value: ' + JSON.stringify(result, null, 2));
+        }
+      } catch (err) {
+        logs.push('[RUNTIME ERROR] ' + err.toString());
+      } finally {
+        console.log = originalLog;
+        console.error = originalError;
+        console.warn = originalWarn;
+      }
+
+      outputEl.textContent = logs.join('\n');
+    }
+
+    // Python Runner Logic (Pyodide)
+    const defaultPy = `# Python 3 Client-Side Playground
+import sys
+
+def greet(name):
+    return f"Hello, {name} from Python {sys.version.split()[0]}!"
+
+print(greet("Developer"))
+
+# Data structure example
+data = [x**2 for x in range(1, 11)]
+print("Squares 1-10:", data)
+`;
+    document.getElementById('py-code').value = defaultPy;
+
+    let pyodideInstance = null;
+
+    async function initPyodide() {
+      const statusEl = document.getElementById('py-status');
+      const outputEl = document.getElementById('py-output');
+      const runBtn = document.getElementById('py-run-btn');
+
+      try {
+        pyodideInstance = await loadPyodide();
+        statusEl.textContent = 'Python 3 Ready';
+        statusEl.className = 'status-badge ready';
+        outputEl.textContent = 'Pyodide engine initialized. Ready to run Python code!';
+        runBtn.disabled = false;
+      } catch (err) {
+        statusEl.textContent = 'Error Loading Pyodide';
+        statusEl.className = 'status-badge error';
+        outputEl.textContent = 'Failed to load Pyodide engine. Check network connectivity.\n' + err.toString();
+      }
+    }
+
+    // Initialize Pyodide on load
+    window.addEventListener('load', () => {
+      initPyodide();
+    });
+
+    async function runPythonCode() {
+      if (!pyodideInstance) return;
+      const code = document.getElementById('py-code').value;
+      const outputEl = document.getElementById('py-output');
+      outputEl.textContent = 'Executing...';
+
+      let stdoutText = '';
+      pyodideInstance.setStdout({
+        batched: (str) => { stdoutText += str + '\n'; }
+      });
+
+      try {
+        const result = await pyodideInstance.runPythonAsync(code);
+        let finalOut = stdoutText;
+        if (result !== undefined) {
+          finalOut += `\n[Result]: ${result}`;
+        }
+        outputEl.textContent = finalOut || 'Program completed with no output.';
+      } catch (err) {
+        outputEl.textContent = stdoutText + '\n[Python Error]\n' + err.toString();
+      }
+    }
+  </script>
+</body>
+</html>
+
