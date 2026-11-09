@@ -311,15 +311,6 @@
       resize: none;
     }
 
-    iframe.preview-frame {
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      min-height: 0;
-      background: #ffffff;
-      border: none;
-    }
-
     .console-output {
       width: 100%;
       height: 100%;
@@ -333,28 +324,6 @@
       white-space: pre-wrap;
       word-break: break-all;
       overflow-y: auto;
-    }
-
-    /* File Uploader Dropzone */
-    .upload-zone {
-      border: 2px dashed var(--border-color);
-      border-radius: 12px;
-      padding: 3rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      margin-bottom: 1.5rem;
-      background-color: rgba(30, 41, 59, 0.5);
-    }
-
-    .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--accent-primary);
-      background-color: rgba(99, 102, 241, 0.05);
-    }
-
-    .upload-zone p {
-      margin-top: 0.5rem;
-      color: var(--text-muted);
     }
 
     /* Calculator View */
@@ -477,8 +446,6 @@
       </div>
       <nav>
         <button class="nav-btn active" onclick="switchTab('home')">Home</button>
-        <button class="nav-btn" onclick="switchTab('uploader')">File Viewer</button>
-        <button class="nav-btn" onclick="switchTab('html-editor')">HTML Sandbox</button>
         <button class="nav-btn" onclick="switchTab('calculator')">Calculator</button>
         <button class="nav-btn" onclick="switchTab('js-runner')">JS Console</button>
         <button class="nav-btn" onclick="switchTab('python-runner')">Python</button>
@@ -493,28 +460,10 @@
     <div id="home" class="tab-content active">
       <div class="hero">
         <h1>Developer & Power User Toolkit</h1>
-        <p>A unified suite of lightweight web development tools, file inspection utilities, and interactive execution environments.</p>
+        <p>A unified suite of lightweight web development tools, interactive calculators, and execution environments.</p>
       </div>
       
       <div class="tools-grid">
-        <div class="tool-card" onclick="switchTab('uploader')">
-          <div>
-            <div class="tool-icon">📁</div>
-            <h3>HTML File Uploader & Viewer</h3>
-            <p>Upload and inspect local HTML files. View source code and render live previews instantly.</p>
-          </div>
-          <button class="btn">Launch Viewer</button>
-        </div>
-
-        <div class="tool-card" onclick="switchTab('html-editor')">
-          <div>
-            <div class="tool-icon">💻</div>
-            <h3>HTML Live Sandbox</h3>
-            <p>Type HTML, CSS, and JS code side-by-side with real-time browser rendering.</p>
-          </div>
-          <button class="btn">Launch Sandbox</button>
-        </div>
-
         <div class="tool-card" onclick="switchTab('calculator')">
           <div>
             <div class="tool-icon">🧮</div>
@@ -549,62 +498,6 @@
             <p>Take a break! Navigate to your dedicated free time page.</p>
           </div>
           <a href="freetime.html" class="btn">Go to Free Time</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Uploader Tab -->
-    <div id="uploader" class="tab-content">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">HTML File Uploader & Viewer</h2>
-          <p class="section-subtitle">Drop or select an HTML file to view its code and live preview</p>
-        </div>
-      </div>
-
-      <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" style="margin: 0 auto 0.5rem;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-        <h3>Click or Drag & Drop HTML File Here</h3>
-        <p>Supports .html, .htm, .txt files</p>
-        <input type="file" id="file-input" accept=".html,.htm,.txt" style="display: none" onchange="handleFileSelect(event)">
-      </div>
-
-      <div class="editor-layout" id="uploader-preview-layout" style="display: none;">
-        <div class="pane">
-          <div class="pane-header">
-            <span id="uploaded-filename">Source Code</span>
-            <button class="btn btn-secondary" onclick="clearUploader()">Clear</button>
-          </div>
-          <textarea id="uploader-code" class="code-editor" readonly></textarea>
-        </div>
-        <div class="pane">
-          <div class="pane-header">Live Preview</div>
-          <iframe id="uploader-frame" class="preview-frame"></iframe>
-        </div>
-      </div>
-    </div>
-
-    <!-- HTML Live Sandbox Tab -->
-    <div id="html-editor" class="tab-content">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">HTML Code Sandbox</h2>
-          <p class="section-subtitle">Type code on the left to see live rendering on the right</p>
-        </div>
-        <div style="display:flex; gap: 8px;">
-          <button class="btn btn-secondary" onclick="resetHTMLSandbox()">Reset</button>
-          <button class="btn" onclick="updateHTMLPreview()">Run Code</button>
-        </div>
-      </div>
-
-      <div class="editor-layout">
-        <div class="pane">
-          <div class="pane-header">HTML Editor</div>
-          <textarea id="sandbox-code" class="code-editor" placeholder="Write your HTML here..." oninput="updateHTMLPreview()"></textarea>
-        </div>
-        <div class="pane">
-          <div class="pane-header">Live Output</div>
-          <iframe id="sandbox-frame" class="preview-frame"></iframe>
         </div>
       </div>
     </div>
@@ -715,88 +608,6 @@
         btn.getAttribute('onclick')?.includes(`'${tabId}'`)
       );
       if(activeBtn) activeBtn.classList.add('active');
-
-      // Re-render HTML Sandbox preview once tab becomes visible on screen
-      if (tabId === 'html-editor') {
-        setTimeout(updateHTMLPreview, 50);
-      }
-    }
-
-    // HTML File Uploader & Viewer Logic
-    const dropZone = document.getElementById('drop-zone');
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    });
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-      const files = e.dataTransfer.files;
-      if (files.length > 0) processFile(files[0]);
-    });
-
-    function handleFileSelect(e) {
-      const files = e.target.files;
-      if (files.length > 0) processFile(files[0]);
-    }
-
-    function processFile(file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const content = e.target.result;
-        document.getElementById('uploader-code').value = content;
-        document.getElementById('uploaded-filename').textContent = file.name;
-        
-        // Make layout visible FIRST
-        document.getElementById('uploader-preview-layout').style.display = 'grid';
-
-        // Set srcdoc safely for HTTPS hosted origins
-        const iframe = document.getElementById('uploader-frame');
-        iframe.srcdoc = content;
-      };
-      reader.readAsText(file);
-    }
-
-    function clearUploader() {
-      document.getElementById('uploader-code').value = '';
-      const iframe = document.getElementById('uploader-frame');
-      iframe.srcdoc = '';
-      document.getElementById('file-input').value = '';
-      document.getElementById('uploader-preview-layout').style.display = 'none';
-    }
-
-    // HTML Sandbox Logic
-    const defaultHTML = `<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
-    h1 { color: #6366f1; }
-    .card { background: #f1f5f9; border-radius: 8px; padding: 20px; margin-top: 15px; }
-  </style>
-</head>
-<body>
-  <h1>Hello World!</h1>
-  <p>Edit this code in the editor to test real-time HTML/CSS changes.</p>
-  <div class="card">
-    <button onclick="alert('Interactive Code Works!')">Click Me</button>
-  </div>
-</body>
-</html>`;
-
-    document.getElementById('sandbox-code').value = defaultHTML;
-
-    function updateHTMLPreview() {
-      const code = document.getElementById('sandbox-code').value;
-      const iframe = document.getElementById('sandbox-frame');
-      iframe.srcdoc = code;
-    }
-
-    function resetHTMLSandbox() {
-      document.getElementById('sandbox-code').value = defaultHTML;
-      updateHTMLPreview();
     }
 
     // Calculator Logic
@@ -936,7 +747,6 @@ print("Squares 1-10:", data)
       const runBtn = document.getElementById('py-run-btn');
 
       try {
-        // Explicitly point to CDN binaries so GitHub Pages doesn't look for local .wasm files
         pyodideInstance = await loadPyodide({
           indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
         });
