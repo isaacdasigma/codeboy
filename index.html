@@ -712,7 +712,7 @@
       );
       if(activeBtn) activeBtn.classList.add('active');
 
-      // Re-render HTML Sandbox preview once tab is visible
+      // Re-render HTML Sandbox preview once tab becomes visible on screen
       if (tabId === 'html-editor') {
         setTimeout(updateHTMLPreview, 50);
       }
@@ -745,15 +745,12 @@
         document.getElementById('uploader-code').value = content;
         document.getElementById('uploaded-filename').textContent = file.name;
         
-        // Show layout FIRST so iframe has non-zero layout dimensions
+        // Make layout visible FIRST
         document.getElementById('uploader-preview-layout').style.display = 'grid';
 
-        // Write directly to active iframe document stream
+        // Set srcdoc safely for HTTPS hosted origins
         const iframe = document.getElementById('uploader-frame');
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        doc.open();
-        doc.write(content);
-        doc.close();
+        iframe.srcdoc = content;
       };
       reader.readAsText(file);
     }
@@ -761,10 +758,7 @@
     function clearUploader() {
       document.getElementById('uploader-code').value = '';
       const iframe = document.getElementById('uploader-frame');
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write('');
-      doc.close();
+      iframe.srcdoc = '';
       document.getElementById('file-input').value = '';
       document.getElementById('uploader-preview-layout').style.display = 'none';
     }
@@ -793,10 +787,7 @@
     function updateHTMLPreview() {
       const code = document.getElementById('sandbox-code').value;
       const iframe = document.getElementById('sandbox-frame');
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
+      iframe.srcdoc = code;
     }
 
     function resetHTMLSandbox() {
@@ -941,7 +932,10 @@ print("Squares 1-10:", data)
       const runBtn = document.getElementById('py-run-btn');
 
       try {
-        pyodideInstance = await loadPyodide();
+        // Explicitly point to CDN binaries so GitHub Pages doesn't look for local .wasm files
+        pyodideInstance = await loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
+        });
         statusEl.textContent = 'Python 3 Ready';
         statusEl.className = 'status-badge ready';
         outputEl.textContent = 'Pyodide engine initialized. Ready to run Python code!';
@@ -949,11 +943,10 @@ print("Squares 1-10:", data)
       } catch (err) {
         statusEl.textContent = 'Error Loading Pyodide';
         statusEl.className = 'status-badge error';
-        outputEl.textContent = 'Failed to load Pyodide engine. Check network connectivity.\n' + err.toString();
+        outputEl.textContent = 'Failed to load Pyodide engine.\n' + err.toString();
       }
     }
 
-    // Initialize Pyodide on page load
     window.addEventListener('load', () => {
       initPyodide();
     });
