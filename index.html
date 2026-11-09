@@ -711,6 +711,11 @@
         btn.getAttribute('onclick')?.includes(`'${tabId}'`)
       );
       if(activeBtn) activeBtn.classList.add('active');
+
+      // Re-render HTML Sandbox preview once tab is visible
+      if (tabId === 'html-editor') {
+        setTimeout(updateHTMLPreview, 50);
+      }
     }
 
     // HTML File Uploader & Viewer Logic
@@ -740,17 +745,26 @@
         document.getElementById('uploader-code').value = content;
         document.getElementById('uploaded-filename').textContent = file.name;
         
-        const iframe = document.getElementById('uploader-frame');
-        iframe.srcdoc = content;
-
+        // Show layout FIRST so iframe has non-zero layout dimensions
         document.getElementById('uploader-preview-layout').style.display = 'grid';
+
+        // Write directly to active iframe document stream
+        const iframe = document.getElementById('uploader-frame');
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(content);
+        doc.close();
       };
       reader.readAsText(file);
     }
 
     function clearUploader() {
       document.getElementById('uploader-code').value = '';
-      document.getElementById('uploader-frame').srcdoc = '';
+      const iframe = document.getElementById('uploader-frame');
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write('');
+      doc.close();
       document.getElementById('file-input').value = '';
       document.getElementById('uploader-preview-layout').style.display = 'none';
     }
@@ -775,11 +789,15 @@
 </html>`;
 
     document.getElementById('sandbox-code').value = defaultHTML;
+
     function updateHTMLPreview() {
       const code = document.getElementById('sandbox-code').value;
-      document.getElementById('sandbox-frame').srcdoc = code;
+      const iframe = document.getElementById('sandbox-frame');
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
     }
-    updateHTMLPreview();
 
     function resetHTMLSandbox() {
       document.getElementById('sandbox-code').value = defaultHTML;
@@ -935,7 +953,7 @@ print("Squares 1-10:", data)
       }
     }
 
-    // Initialize Pyodide on load
+    // Initialize Pyodide on page load
     window.addEventListener('load', () => {
       initPyodide();
     });
@@ -965,4 +983,3 @@ print("Squares 1-10:", data)
   </script>
 </body>
 </html>
-
